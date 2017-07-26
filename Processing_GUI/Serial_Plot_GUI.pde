@@ -1,27 +1,30 @@
-/////////////////////////////////////////////////////////////
-// Serial GUI - Arkadi & Alon 8/1/2017 - arkadiraf@gmail.com //
-/////////////////////////////////////////////////////////////
-// Ver 1.7 - finishes//
+/////////////////////////////////////////////////////////////////
+// Serial GUI - Arkadi & Alon 26/07/2017 - arkadiraf@gmail.com //
+/////////////////////////////////////////////////////////////////
+// Ver 1.8 - Changed to IMU mode//
 ///////////////////////////////////////////
 
 ///////////////////////////////////////////
 // To fix /////////////////////////////////
 ///////////////////////////////////////////
 /*
-
+  - fix serial init cp5, serial ports 1 for imu mode. remove dropdown option for 2 serial ports (not used)
+    requires some fixes to work with 1 or 2 serial ports in parallel currently one serial port is available.
  */
 
 /*
 Future features:
- - connect button, add option to press disconnect in order to reset connection.
+ - rearrange code (remove all commented out code, wich supports 2 serial ports)
+ - add initialization gui to set up all parameters. number of serial ports, channles , data ranges etc.
+ - add support to multiple graphs on the same plot.
  */
 
 // Debug mode.
 boolean DEBUG_MODE=false;
 
 // interface mode
-boolean FMRI_MODE=false;
-boolean MOUSE_MODE=true;
+boolean IMU_MODE=true;
+boolean MOUSE_MODE=false;
 boolean DATA_MODE=false;
 ////////////////
 // libraries: //
@@ -50,7 +53,7 @@ import java.io.IOException;
 //declare cp5 main object
 ControlP5 cp5;
 // add drop down
-ScrollableList serialPortsList_1, serialPortsList_2;
+ScrollableList serialPortsList_1; //, serialPortsList_2;
 
 // add serial objects
 Serial[] myPorts;
@@ -146,9 +149,9 @@ void settings() {
   // set window size
   size(win_width, win_height);
 
-  //init FMRI variables
-  if (FMRI_MODE) { 
-    Init_FMRI_Variables();
+  //init IMU_MODE variables
+  if (IMU_MODE) { 
+    Init_IMU_Variables();
   } else if (MOUSE_MODE) {
     Init_Mouse_Demo_Variables();
   } else { 
@@ -298,6 +301,6 @@ void serialEvent(Serial p) {
       println(incoming_msg_temp);
     }
     // parse incoming data
-    if ((FMRI_MODE)&&(LIVE_MODE)) parse_msg_FMRI(incoming_msg_temp);
+    if ((IMU_MODE)&&(LIVE_MODE)) parse_msg_IMU(incoming_msg_temp);
   }
 } // end serial event

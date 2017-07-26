@@ -11,8 +11,8 @@ color b_open_color=color(255, 255, 125);
 
 color b_start_color_on=color(0, 255, 0);
 color b_start_color_off=color(255, 0, 0);
-color b_serial_color_on=color(0, 255, 0);
-color b_serial_color_off=color(255, 0, 0);
+//color b_serial_color_on=color(0, 255, 0);
+//color b_serial_color_off=color(255, 0, 0);
 
 // fonts
 int gui_font_size = 16; // not implemented for all text sizes
@@ -53,15 +53,15 @@ void setup_GUI() {
     .setFont(createFont("arial", 14*gui_font_scalar))
     ; 
 
-  serialPortsList_2 = cp5.addScrollableList("serial_TTL")
-    .setPosition(button_width, 0)
-    .setSize(button_width, button_height*2)
-    .setBarHeight(button_height/2)
-    .setItemHeight(button_height/2)
-    .addItems(Serial.list())
-    .setType(ScrollableList.DROPDOWN) // currently supported DROPDOWN and LIST
-    .setFont(createFont("arial", 14*gui_font_scalar))
-    ; 
+  //serialPortsList_2 = cp5.addScrollableList("serial_TTL")
+  //  .setPosition(button_width, 0)
+  //  .setSize(button_width, button_height*2)
+  //  .setBarHeight(button_height/2)
+  //  .setItemHeight(button_height/2)
+  //  .addItems(Serial.list())
+  //  .setType(ScrollableList.DROPDOWN) // currently supported DROPDOWN and LIST
+  //  .setFont(createFont("arial", 14*gui_font_scalar))
+  //  ; 
 
   ///////////////////////
   // init chart object //
@@ -123,17 +123,17 @@ void setup_GUI() {
     .setBroadcast(true)
     ;
 
-  cp5.addButton("b_serial")
-    .setBroadcast(false)
-    .setValue(0)
-    .setPosition(button_width*2, 0)
-    .setSize(button_width/2, button_height)
-    .setFont(createFont("arial", 20*gui_font_scalar))
-    .setColorBackground(b_serial_color_off)
-    .setColorLabel(color(0)) 
-    .setLabel("Connect")
-    .setBroadcast(true)
-    ;  
+  //cp5.addButton("b_serial")
+  //  .setBroadcast(false)
+  //  .setValue(0)
+  //  .setPosition(button_width*2, 0)
+  //  .setSize(button_width/2, button_height)
+  //  .setFont(createFont("arial", 20*gui_font_scalar))
+  //  .setColorBackground(b_serial_color_off)
+  //  .setColorLabel(color(0)) 
+  //  .setLabel("Connect")
+  //  .setBroadcast(true)
+  //  ;  
 
   cp5.addButton("b_open")
     .setBroadcast(false)
@@ -173,8 +173,8 @@ void setup_GUI() {
   //serial port label // look for backround setting
   serial_port_label = cp5.addTextlabel("serial_port_label")
     //.setText("Select Serial Port")
-    .setText(" ")
-    .setPosition(0, button_height/2)
+    .setText(" Select Serial Port ")
+    .setPosition(button_width, 0)
     .setColorValue(0)
     .setFont(createFont("arial", 16*gui_font_scalar))
     ;
@@ -223,10 +223,10 @@ public void b_start(int theValue) {
   }
 }
 
-public void b_serial() {
-  cp5.getController("b_serial").setColorBackground(b_serial_color_on);
-  setup_Serial();
-}
+//public void b_serial() {
+//  cp5.getController("b_serial").setColorBackground(b_serial_color_on);
+//  setup_Serial();
+//}
 
 
 public void b_reset() {
@@ -277,16 +277,17 @@ void serial_data(int n) {
   /* request the selected item based on index n */
   serial_port_open(n, 0);// port num - the serial port to define ,  port_def the defined serial port
   // check if both ports defined, than update button through serial setup function:
-  if ((myPorts[0]!=null)&&(myPorts[1]!=null)) cp5.getController("b_serial").setColorBackground(b_serial_color_on);
+  // if ((myPorts[0]!=null)&&(myPorts[1]!=null)) cp5.getController("b_serial").setColorBackground(b_serial_color_on);
 }
 
-// Serial dropdown event
-void serial_TTL(int n) {
-  /* request the selected item based on index n */
-  serial_port_open(n, 1);// port num - the serial port to define ,  port_def the defined serial port
-  // check if both ports defined, than update button through serial setup function:
-  if ((myPorts[0]!=null)&&(myPorts[1]!=null))  cp5.getController("b_serial").setColorBackground(b_serial_color_on);
-}
+// not used currently, requires some fixes to work with 1 or 2 serial ports in parallele
+//// Serial dropdown event
+//void serial_TTL(int n) {
+//  /* request the selected item based on index n */
+//  serial_port_open(n, 1);// port num - the serial port to define ,  port_def the defined serial port
+//  // check if both ports defined, than update button through serial setup function:
+//  if ((myPorts[0]!=null)&&(myPorts[1]!=null))  cp5.getController("b_serial").setColorBackground(b_serial_color_on);
+//}
 
 
 ////////////////
@@ -311,11 +312,11 @@ void resize_GUI() {
   serialPortsList_1.setItemHeight(button_height/2);
   serialPortsList_1.setFont(createFont("arial", 14*gui_font_scalar));
 
-  serialPortsList_2.setPosition(button_width, 0);
-  serialPortsList_2.setSize(button_width, button_height*2);
-  serialPortsList_2.setBarHeight(button_height/2);
-  serialPortsList_2.setItemHeight(button_height/2);
-  serialPortsList_2.setFont(createFont("arial", 14*gui_font_scalar));
+  //serialPortsList_2.setPosition(button_width, 0);
+  //serialPortsList_2.setSize(button_width, button_height*2);
+  //serialPortsList_2.setBarHeight(button_height/2);
+  //serialPortsList_2.setItemHeight(button_height/2);
+  //serialPortsList_2.setFont(createFont("arial", 14*gui_font_scalar));
 
 
   /////////////////////////
@@ -347,9 +348,9 @@ void resize_GUI() {
   cp5.getController("b_start").setPosition(width/2-button_width/2, 0);
   cp5.getController("b_start").setSize(button_width, button_height);
   cp5.getController("b_start").setFont(createFont("arial", 20*gui_font_scalar));
-  cp5.getController("b_serial").setPosition(button_width*2, 0);
-  cp5.getController("b_serial").setSize(button_width/2, button_height);
-  cp5.getController("b_serial").setFont(createFont("arial", 20*gui_font_scalar));
+  //cp5.getController("b_serial").setPosition(button_width*2, 0);
+  //cp5.getController("b_serial").setSize(button_width/2, button_height);
+  //cp5.getController("b_serial").setFont(createFont("arial", 20*gui_font_scalar));
   cp5.getController("b_open").setPosition(width-button_width, 0);
   cp5.getController("b_open").setSize(button_width, button_height);
   cp5.getController("b_open").setFont(createFont("arial", 20*gui_font_scalar));
@@ -362,5 +363,5 @@ void resize_GUI() {
 
   gui_font_scalar = 0.25+min((float)height/(float)displayHeight, (float)width/(float)displayWidth);
   cp5.getController("file_label").setPosition(width/2+button_width/2+5, 0);
-  cp5.getController("serial_port_label").setPosition(0, button_height/2);
+  cp5.getController("serial_port_label").setPosition(button_width, 0);
 }

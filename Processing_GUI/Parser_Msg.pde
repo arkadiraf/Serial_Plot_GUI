@@ -1,28 +1,31 @@
 // Parse Message class
 
-//Setup serial objects
-void setup_Serial() {
-  // check if serial ports are defined
-  if (Serial.list().length<myPorts.length) {
-    cp5.getController("b_serial").setColorBackground(b_serial_color_off);
-    if (DEBUG_MODE) {
-      println("Not enough serial ports ", Serial.list().length, myPorts.length);
-    }
-  } else if (Serial.list().length>=2) {
-    // if serial ports aren't defined, set default ports:
-    if ((myPorts[0]==null)||(myPorts[1]==null)) {
-      serial_port_open(0, 0);// port num - the serial port to define ,  port_def the defined serial port
-      serial_port_open(1, 1);
-      cp5.get(ScrollableList.class, "serial_data").setValue(0); // update dropdown serial_data
-      cp5.get(ScrollableList.class, "serial_TTL").setValue(1); // update dropdown serial_data
-    }
-    if (DEBUG_MODE) {
-      printArray(Serial.list());
-      printArray(myPorts);
-      printArray(myPortsNames);
-    }
-  }
-}
+////Setup serial objects
+//void setup_Serial() {
+//  // check if serial ports are defined
+//  if (Serial.list().length<myPorts.length) {
+//    cp5.getController("b_serial").setColorBackground(b_serial_color_off);
+//    if (DEBUG_MODE) {
+//      println("Not enough serial ports ", Serial.list().length, myPorts.length);
+//    }
+    
+//  // not supported 2 serial ports for now 
+//  //} else if (Serial.list().length>=2) {
+//  //  // if serial ports aren't defined, set default ports:
+//  //  if ((myPorts[0]==null)||(myPorts[1]==null)) {
+//  //    serial_port_open(0, 0);// port num - the serial port to define ,  port_def the defined serial port
+//  //    serial_port_open(1, 1);
+//  //    cp5.get(ScrollableList.class, "serial_data").setValue(0); // update dropdown serial_data
+//  //    cp5.get(ScrollableList.class, "serial_TTL").setValue(1); // update dropdown serial_data
+//  //  }
+  
+//    if (DEBUG_MODE) {
+//      printArray(Serial.list());
+//      printArray(myPorts);
+//      printArray(myPortsNames);
+//    }
+//  }
+//}
 
 // open port
 void serial_port_open(int _port_num, int _port_def) { // port num - the serial port to define ,  port_def the defined serial port
@@ -51,7 +54,7 @@ void serial_port_open(int _port_num, int _port_def) { // port num - the serial p
   }
 }
 // Parse message from both ports
-void parse_msg_FMRI(String _incoming_str) {
+void parse_msg_IMU(String _incoming_str) {
   String incoming_str=_incoming_str;
   // add data integrity test to reduce crash events
   if (incoming_str==null) { // verify data available
@@ -60,27 +63,23 @@ void parse_msg_FMRI(String _incoming_str) {
     String[] msg_split=split(incoming_str, ':');
     // verify split successful and data available:
     if (msg_split.length==2) {
-      if (msg_split[0].equals("ttl")) {
-        float ttl_value = float(msg_split[1]);
-        // update ttl value
-        data_points_update[3]=ttl_value;
-        if (DEBUG_MODE) {
-          println("ttl "+ttl_value);
-        }
-      } else if (msg_split[0].equals("data")) {
+        if (msg_split[0].equals("IMU")) {
         float[] data_values = float(split(msg_split[1], ','));
-        if (data_values.length==4){
+        if (data_values.length==12){
         if (DEBUG_MODE) {
           println("data "+data_values);
         }
         // update data points
-        data_points_update[0]=data_values[1]; // first value millis
-        data_points_update[1]=data_values[2];
-        data_points_update[2]=data_values[3];
+        //data_points_update[0]=data_values[2]; // first value seconds
+        data_points_update[0]=data_values[2]/10000; // first value seconds
+        data_points_update[1]=data_values[3]; // Acc X
+        data_points_update[2]=data_values[4]; // Acc Y
+        data_points_update[3]=data_values[5]; // Acc Z
         // Update chart data:
         update_chart_data();
+        //println("data not valid "+data_values);
         }else{
-          println("data not valid "+data_values);
+          println("data not valid "+data_points_update[0]);
         }
       }
     }else{
