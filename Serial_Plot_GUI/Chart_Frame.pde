@@ -71,7 +71,7 @@ class Chart_Frame {
     ///////////////////////////////////
     cp5.addSlider("slider_scale"+id)  
       .setBroadcast(false)
-      .setRange(-1.0, 1.0)
+      .setRange(-2.0, 2.0)
       .setValue(0)
       .setSliderMode(Slider.FLEXIBLE)
       .setColorBackground(color(0, 125, 125))

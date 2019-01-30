@@ -8,7 +8,7 @@
 //    if (DEBUG_MODE) {
 //      println("Not enough serial ports ", Serial.list().length, myPorts.length);
 //    }
-
+    
 //  // not supported 2 serial ports for now 
 //  //} else if (Serial.list().length>=2) {
 //  //  // if serial ports aren't defined, set default ports:
@@ -18,7 +18,7 @@
 //  //    cp5.get(ScrollableList.class, "serial_data").setValue(0); // update dropdown serial_data
 //  //    cp5.get(ScrollableList.class, "serial_TTL").setValue(1); // update dropdown serial_data
 //  //  }
-
+  
 //    if (DEBUG_MODE) {
 //      printArray(Serial.list());
 //      printArray(myPorts);
@@ -63,65 +63,42 @@ void parse_msg_IMU(String _incoming_str) {
     String[] msg_split=split(incoming_str, ':');
     // verify split successful and data available:
     if (msg_split.length==2) {
-      if (msg_split[0].equals("IMU")) {
+        if (msg_split[0].equals("MSG")) {
         float[] data_values = float(split(msg_split[1], ','));
-        if (data_values.length==9) {
+        if (data_values.length==8){
           if (DEBUG_MODE) {
             println("data "+data_values);
           }
-          // update data points
-          //data_points_update[0]=data_values[2]; // first value seconds
-          data_points_update[0]=(data_values[0]%1000); // first value seconds
-          data_points_update[1]=data_values[1]; // Yaw
-          data_points_update[2]=data_values[2]; // Pitch
-          data_points_update[3]=data_values[3]; // Roll
-          // Update chart data:
-          update_chart_data();
-          //println("data not valid "+data_values);
-        } else {
-          println("data not valid "+data_values.length);
+        // update data points
+        //data_points_update[0]=data_values[2]; // first value seconds
+        data_points_update[0]=(data_values[0]/1000)%1; // first value seconds
+        data_points_update[1]=data_values[2]; // Acc X
+        data_points_update[2]=data_values[3]; // Acc Y
+        data_points_update[3]=data_values[4]; // Acc Z
+        // Update chart data:
+        update_chart_data();
+        //println("data not valid "+data_values);
+        }else{
+          println("data not valid "+data_points_update[0]);
         }
       }
-    } else {
+    }else{
       println("data not valid "+msg_split);
     }
   }
 }
 
-
-// Force mode
 // Parse message from both ports
-void parse_msg_FORCE(String _incoming_str) {
+void parse_msg_MIC(String _incoming_str) {
   String incoming_str=_incoming_str;
   // add data integrity test to reduce crash events
   if (incoming_str==null) { // verify data available
     println("no Data available "+incoming_str);
   } else {
-    String[] msg_split=split(incoming_str, ':');
-    // verify split successful and data available:
-    if (msg_split.length==2) {
-      if (msg_split[0].equals("IMU")) {
-        float[] data_values = float(split(msg_split[1], ','));
-        if (data_values.length==9) {
-          if (DEBUG_MODE) {
-            println("data "+data_values);
-          }
-          // update data points
-          //data_points_update[0]=data_values[2]; // first value seconds
-          data_points_update[0]=(data_values[0]%1000); // first value seconds
-          data_points_update[1]=data_values[4]; // Force 1
-          data_points_update[2]=data_values[5]; // Force 2
-          data_points_update[3]=data_values[6]; // Force 3
-          data_points_update[4]=data_values[7]; // Force 4
-          // Update chart data:
-          update_chart_data();
-          //println("data not valid "+data_values);
-        } else {
-          println("data not valid "+data_values.length);
-        }
-      }
-    } else {
-      println("data not valid "+msg_split);
-    }
+    float[] data_values = float(split(incoming_str, ','));
+    data_points_update[0]=data_values[0]; 
+    update_chart_data();
+    // print recieved data
+    // println(data_values[0]);
   }
 }

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////
-// Serial GUI - Arkadi & Alon 10/01/2018 - arkadiraf@gmail.com //
+// Serial GUI - Arkadi & Alon 26/07/2017 - arkadiraf@gmail.com //
 /////////////////////////////////////////////////////////////////
-// Ver 1.8 - Changed to IMU + Force sensor mode//
+// Ver 1.8 - Changed to IMU mode//
 ///////////////////////////////////////////
 
 ///////////////////////////////////////////
@@ -24,9 +24,9 @@ boolean DEBUG_MODE=false;
 
 // interface mode
 boolean IMU_MODE=true;
-boolean FORCE_MODE=false;
 boolean MOUSE_MODE=false;
 boolean DATA_MODE=false;
+boolean MIC_MODE=false;
 ////////////////
 // libraries: //
 ////////////////
@@ -98,7 +98,7 @@ boolean b_start_state = false;
 boolean LIVE_MODE=true;
 
 // Data variables
-int glob_datapoints=1000;
+int glob_datapoints=5000;
 float[] data_points_update;
 //setting data range
 float[] data_min_range, data_max_range;
@@ -153,10 +153,10 @@ void settings() {
   //init IMU_MODE variables
   if (IMU_MODE) { 
     Init_IMU_Variables();
-  }else if(FORCE_MODE){
-    Init_Force_Variables();
-  }else if (MOUSE_MODE) {
-    Init_Mouse_Demo_Variables();
+  } else if (MOUSE_MODE) {
+    Init_Mouse_Demo_Variables(); 
+  }else if (MIC_MODE) {
+    Init_Mic_Variables();  
   } else { 
     Init_Variables();
   };
@@ -305,6 +305,6 @@ void serialEvent(Serial p) {
     }
     // parse incoming data
     if ((IMU_MODE)&&(LIVE_MODE)) parse_msg_IMU(incoming_msg_temp);
-    if ((FORCE_MODE)&&(LIVE_MODE)) parse_msg_FORCE(incoming_msg_temp);
+    if ((MIC_MODE)&&(LIVE_MODE)) parse_msg_MIC(incoming_msg_temp);
   }
 } // end serial event
